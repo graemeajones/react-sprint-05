@@ -1,7 +1,7 @@
 import useLoad from '../../api/useLoad.js';
 import Form from '../../UI/Form.js';
 
-const emptyModule = {
+const emptyRecord = {
   ModuleName: "Dummy Module Name",
   ModuleCode: "XY0123",
   ModuleLevel: 4,
@@ -10,7 +10,7 @@ const emptyModule = {
   ModuleImageURL: "https://images.freeimages.com/images/small-previews/fa1/cable-5-1243077.jpg"
 };
 
-export default function ModuleForm({ onCancel, onSubmit, initialModule=emptyModule }) {
+export default function ModuleForm({ onCancel, onSubmit, initialRecord=emptyRecord }) {
   // Initialisation ------------------------------
   const validation = {
     isValid: {
@@ -29,12 +29,12 @@ export default function ModuleForm({ onCancel, onSubmit, initialModule=emptyModu
       ModuleLeaderID: "No module leader has been selected",
       ModuleImageURL: "Image URL is not a valid URL string"
     }
-  }
+  } 
 
   const conformance = ['ModuleLevel','ModuleYearID','ModuleLeaderID'];
 
   // State ---------------------------------------
-  const [module, errors, handleChange, handleSubmit] = Form.useForm(initialModule, conformance, validation, onCancel, onSubmit);
+  const [module, errors, handleChange, handleSubmit] = Form.useForm(initialRecord, conformance, validation, onCancel, onSubmit);
   const [years, , loadingYearsMessage,] = useLoad('/years');
   const [leaders, , loadingLeadersMessage,] = useLoad('/users/staff');
 

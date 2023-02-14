@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate,useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth.js';
 import useLoad from '../api/useLoad.js';
-import './Pages.scss';
+import './Page.scss';
 import './FauxLogin.scss';
 
 export default function Login() {

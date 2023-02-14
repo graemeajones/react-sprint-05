@@ -21,7 +21,7 @@ export default function Navbar() {
   return (
     <nav className="Navbar">
       <div className="navItem">
-        <NavLink to='/' className={getLinkStyle}>My Modules</NavLink>
+        <NavLink to='/' className={getLinkStyle}>My Dashboard</NavLink>
       </div>
       <div className="navItem">
         <NavLink to='/secrets' className={getLinkStyle}>My Secrets</NavLink>
