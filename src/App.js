@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/auth/useAuth.js';
 import ProtectedRoute from './components/auth/ProtectedRoute.js';
 import Layout from './components/layouts/Layout.js';
-import MyModules from './components/pages/MyModules.js';
+import MyDashboard from './components/pages/MyDashboard.js';
 import MySecrets from './components/pages/MySecrets.js';
 import FauxLogin from './components/pages/FauxLogin.js';
 import PageNotFound from './components/pages/404.js';
@@ -15,7 +15,7 @@ export default function App() {
       <AuthProvider>  
         <Layout>
           <Routes>
-            <Route path ='/' element={<ProtectedRoute><MyModules /></ProtectedRoute>} />
+            <Route path ='/' element={<ProtectedRoute><MyDashboard /></ProtectedRoute>} />
             <Route path='/secrets' element={<ProtectedRoute><MySecrets /></ProtectedRoute>} />
             <Route path='/login' element={<FauxLogin />} />
             <Route path='*' element={<PageNotFound />} />

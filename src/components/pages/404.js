@@ -1,4 +1,4 @@
-import './Pages.scss';
+import './Page.scss';
 
 export default function PageNotFound() {
   // Properties ----------------------------------

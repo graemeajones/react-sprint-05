@@ -5,12 +5,12 @@ import Panel from '../../UI/Panel.js';
 import ObjectTable from '../../UI/ObjectTable.js';
 import Action from '../../UI/Actions.js';
 import ToolTipDecorator from '../../UI/ToolTipDecorator.js';
-import ModuleForm from '../../entities/modules/ModuleForm.js';
+import ProjectForm from '../projects/ProjectForm.js';
 
-export default function ModulePanels({ modules, reload }) {
+export default function ProjectPanels({ projects, reload }) {
   // Initialisation ------------------------------
-  const putModulesEndpoint = '/modules';
-  const deleteModulesEndpoint = '/modules';
+  const putProjectsEndpoint = '/projects';
+  const deleteProjectsEndpoint = '/projects';
 
   // State ---------------------------------------
   const [showFormId, setShowFormId] = useState(0);
@@ -23,14 +23,14 @@ export default function ModulePanels({ modules, reload }) {
 
   const handleDelete = async (id) => { 
     dismissModal();
-    const response = await API.delete(`${deleteModulesEndpoint}/${id}`);
+    const response = await API.delete(`${deleteProjectsEndpoint}/${id}`);
     response.isSuccess
       ? reload()
       : showErrorModal("Delete failed!", response.message);
   }
 
-  const handleSubmit = async (module) => {
-    const response = await API.put(`${putModulesEndpoint}/${module.ModuleID}`, module);
+  const handleSubmit = async (project) => {
+    const response = await API.put(`${putProjectsEndpoint}/${project.ProjectID}`, project);
     if (response.isSuccess) {
       setShowFormId(0);
       reload();
@@ -41,7 +41,7 @@ export default function ModulePanels({ modules, reload }) {
   const showDeleteModal = (id) => handleModal({
     show: true,
     title: "Alert!",
-    content: <p> Are you sure you want to delete this module?</p>,
+    content: <p> Are you sure you want to delete this project?</p>,
     actions: [
       <ToolTipDecorator key="ActionYes" message="Click to confirm deletion">
         <Action.Yes showText onClick={() => handleDelete(id)} />
@@ -67,36 +67,38 @@ export default function ModulePanels({ modules, reload }) {
 
   // View ----------------------------------------
   const displayableAttributes = [
-    { key: 'ModuleLevel', label: 'Module level' },
-    { key: 'ModuleYearName', label: 'Year taken' },
-    { key: 'ModuleLeaderName', label: 'Module leader' }
+    { key: 'ProjectName', label: 'Project name' },
+    { key: 'ProjectModuleName', label: 'Module name' },
+    { key: 'ProjectStartdate', label: 'Project start date' },
+    { key: 'ProjectGroupsize', label: 'Project group size' },
+    { key: 'ProjectProjectstatusName', label: 'Project status' }
   ];
 
   return (
     <Panel.Container>
       {
-        modules.map((module) =>
+        projects.map((project) =>
           <Panel
-            key={module.ModuleID}
-            title={`${module.ModuleCode} ${module.ModuleName}`}
+            key={project.ProjectID}
+            title={`${project.ProjectName}`}
             level={3}
           >
             <Panel.Static level={4}>
-              <ObjectTable object={module} attributes={displayableAttributes} />
+              <ObjectTable object={project} attributes={displayableAttributes} />
             </Panel.Static>
 
             <Action.Tray>
-              <ToolTipDecorator message="Modify this module">
-                <Action.Modify showText onClick={() => toggleModify(module.ModuleID)} buttonText="Modify module"/>
+              <ToolTipDecorator message="Modify this project">
+                <Action.Modify showText onClick={() => toggleModify(project.ProjectID)} buttonText="Modify project"/>
               </ToolTipDecorator>
-              <ToolTipDecorator message="Delete this module">
-                <Action.Delete showText onClick={() => showDeleteModal(module.ModuleID)} buttonText="Delete module"/>
+              <ToolTipDecorator message="Delete this project">
+                <Action.Delete showText onClick={() => showDeleteModal(project.ProjectID)} buttonText="Delete project"/>
               </ToolTipDecorator>
             </Action.Tray>
 
             {
-              (showFormId === module.ModuleID ) &&
-                <ModuleForm initialRecord={module} onCancel={handleCancel} onSubmit={handleSubmit} />
+              (showFormId === project.ProjectID ) &&
+                <ProjectForm initialRecord={project} onCancel={handleCancel} onSubmit={handleSubmit} />
             }
 
           </Panel>
