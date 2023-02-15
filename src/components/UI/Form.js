@@ -67,7 +67,7 @@ function useForm(initialRecord, conformance, { isValid, errorMessage }, onCancel
   // Handlers ------------------------------------
   const handleChange = (event) => { 
     const { name, value } = event.target;
-    const newValue = conformance.includes(name) ? parseInt(value) : value;
+    const newValue = conformance.html2js[name](value);
     setRecord({ ...record, [name]: newValue });
     setErrors({ ...errors, [name]: isValid[name](newValue) ? null : errorMessage[name]});
   };

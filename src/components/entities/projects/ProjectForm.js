@@ -4,9 +4,9 @@ import Form from '../../UI/Form.js';
 const emptyRecord = {
   ProjectName: "Dummy project name",
   ProjectGroupsize: 5,
-  ProjectStartdate: "",
+  ProjectStartdate: new Date(),
   ProjectProjectstatusID: 1,
-  ProjectModuleID: 0
+  ProjectModuleID: null
 };
 
 export default function ProjectForm({ onCancel, onSubmit, initialRecord = emptyRecord }) {
@@ -15,9 +15,9 @@ export default function ProjectForm({ onCancel, onSubmit, initialRecord = emptyR
     isValid: {
       ProjectName: (name) => name.length > 8,
       ProjectGroupsize: (size) => (size > 1),
-      ProjectStartdate: (date) => true,
+      ProjectStartdate: (date) => date.getTime() > (new Date()).getTime(),
       ProjectProjectstatusID: (id) => id > 0, 
-      ProjectModuleID: (id) => id > 0 
+      ProjectModuleID: (id) => (id === null) || (id > 0)
     },
     errorMessage: {
       ProjectName: "Project name is too short",
@@ -28,7 +28,22 @@ export default function ProjectForm({ onCancel, onSubmit, initialRecord = emptyR
     }
   };
 
-  const conformance = ['ProjectGroupsize', 'ProjectProjectstatusID', 'ProjectModuleID'];
+  const conformance = {
+    js2html: {
+      ProjectName: (name) => name,
+      ProjectGroupsize: (size) => size,
+      ProjectStartdate: (date) => date.toISOString().slice(0,10),
+      ProjectProjectstatusID: (id) => id === null ? 0 : id,
+      ProjectModuleID: (id) => id === null ? 0 : id
+    },
+    html2js: {
+      ProjectName: (name) => name,
+      ProjectGroupsize: (size) => size,
+      ProjectStartdate: (date) => new Date(date),
+      ProjectProjectstatusID: (id) => parseInt(id) === 0 ? null : parseInt(id),
+      ProjectModuleID: (id) => parseInt(id) === 0 ? null : parseInt(id)
+    }
+  };
 
   // State ---------------------------------------
   const [project, errors, handleChange, handleSubmit] = Form.useForm(initialRecord, conformance, validation, onCancel, onSubmit);
@@ -49,7 +64,7 @@ export default function ProjectForm({ onCancel, onSubmit, initialRecord = emptyR
         <input
           type="text"
           name="ProjectName" 
-          value={project.ProjectName}
+          value={conformance.js2html['ProjectName'](project.ProjectName)}
           onChange={handleChange}
         />
       </Form.Item>
@@ -63,7 +78,7 @@ export default function ProjectForm({ onCancel, onSubmit, initialRecord = emptyR
         <input
           type="number"
           name="ProjectGroupsize" 
-          value={project.ProjectGroupsize}
+          value={conformance.js2html['ProjectGroupsize'](project.ProjectGroupsize)}
           onChange={handleChange}
         />
       </Form.Item>
@@ -75,10 +90,9 @@ export default function ProjectForm({ onCancel, onSubmit, initialRecord = emptyR
         error={errors.ProjectStartdate}
       >
         <input
-          type="string"
-          placeholder='YYYY/MM/DD'
-          name="ProjectStartdate" 
-          value={project.ProjectStartdate} 
+          type="date"
+          name="ProjectStartdate"
+          value={conformance.js2html['ProjectStartdate'](project.ProjectStartdate)}
           onChange={handleChange}
         />
       </Form.Item>
@@ -96,7 +110,7 @@ export default function ProjectForm({ onCancel, onSubmit, initialRecord = emptyR
               ? <p>No records found</p>
               : <select
                   name="ProjectModuleID"
-                  value={project.ProjectModuleID}
+                  value={conformance.js2html['ProjectModuleID'](project.ProjectModuleID)}
                   onChange={handleChange}
                 >
                   <option value="0">None selected</option>
@@ -120,7 +134,7 @@ export default function ProjectForm({ onCancel, onSubmit, initialRecord = emptyR
               ? <p>No records found</p>
               : <select
                   name="ProjectProjectstatusID"
-                  value={project.ProjectProjectstatusID}
+                  value={conformance.js2html['ProjectProjectstatusID'](project.ProjectProjectstatusID)}
                   onChange={handleChange}
                 >
                   <option value="0" disabled>None selected</option>
