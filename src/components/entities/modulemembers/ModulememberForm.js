@@ -10,8 +10,8 @@ export default function ModulememberForm({ onCancel, onSubmit, initialModulememb
   // Initialisation ------------------------------
   const validation = {
     isValid: {
-      ModulememberModuleID: (id) => id !== 0,
-      ModulememberUserID: (id) => id !== 0
+      ModulememberModuleID: (id) => (id !== null) && (id > 0),
+      ModulememberUserID: (id) => (id !== null) && (id > 0)
     },
     errorMessage: {
       ModulememberModuleID: "No module has been selected",
@@ -19,7 +19,16 @@ export default function ModulememberForm({ onCancel, onSubmit, initialModulememb
     }
   }
 
-  const conformance = ['ModulememberModuleID','ModulememberUserID'];
+  const conformance = {
+    js2html: {
+      ModulememberModuleID: (id) => id === null ? 0 : id,
+      ModulememberUserID: (id) => id === null ? 0 : id
+    },
+    html2js: {
+      ModulememberModuleID: (id) => parseInt(id) === 0 ? null : parseInt(id),
+      ModulememberUserID: (id) => parseInt(id) === 0 ? null : parseInt(id)
+    }
+  };
 
   // State ---------------------------------------
   const [modulemember, errors, handleChange, handleSubmit] = Form.useForm(initialModulemember, conformance, validation, onCancel, onSubmit);
@@ -44,7 +53,7 @@ export default function ModulememberForm({ onCancel, onSubmit, initialModulememb
               ? <p>No records found</p>
               : <select
                   name="ModulememberModuleID"
-                  value={modulemember.ModulememberModuleID}
+                  value={conformance.js2html['ModulememberModuleID'](modulemember.ModulememberModuleID)}
                   onChange={handleChange}
                 >
                   <option value="0" disabled>None selected</option>
@@ -71,7 +80,8 @@ export default function ModulememberForm({ onCancel, onSubmit, initialModulememb
               ? <p>No records found</p>
               : <select
                   name="ModulememberUserID"
-                  value={modulemember.ModulememberUserID}
+                value={conformance.js2html['ModulememberUserID'](modulemember.ModulememberUserID)}
+
                   onChange={handleChange}
                 >
                   <option value="0" disabled>None selected</option>
